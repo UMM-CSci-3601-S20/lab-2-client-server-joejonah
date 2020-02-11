@@ -1,6 +1,6 @@
 # CSCI 3601 Lab #2 - Building a web server in Java with Javalin
 
-[![Server Build Status](workflows/Server%20Java/badge.svg)](actions)
+[![Server Build Status](../../workflows/Server%20Java/badge.svg)](actions)
 
 Here you will explore serving up a simple website that you create,
 using a server written with the [Javalin framework][javalin-io] server.

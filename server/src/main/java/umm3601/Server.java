@@ -10,7 +10,7 @@ import umm3601.user.UserController;
 public class Server {
 
   public static final String CLIENT_DIRECTORY = "../client";
-  public static final String USER_DATA_FILE = "src/main/data/users.json";
+  public static final String USER_DATA_FILE = "/users.json";
   private static Database userDatabase;
 
   public static void main(String[] args) {

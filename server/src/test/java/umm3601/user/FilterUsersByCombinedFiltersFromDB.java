@@ -18,7 +18,7 @@ public class FilterUsersByCombinedFiltersFromDB {
 
   @Test
   public void listUsersWithCombinedFilters() throws IOException {
-    Database db = new Database("src/main/data/users.json");
+    Database db = new Database("/users.json");
     Map<String, List<String>> queryParams = new HashMap<>();
 
     queryParams.put("age", Arrays.asList(new String[] { "25" }));

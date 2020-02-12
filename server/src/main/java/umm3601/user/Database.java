@@ -1,7 +1,7 @@
 package umm3601.user;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class Database {
 
   public Database(String userDataFile) throws IOException {
     Gson gson = new Gson();
-    FileReader reader = new FileReader(userDataFile);
+    InputStreamReader reader = new InputStreamReader(getClass().getResourceAsStream(userDataFile));
     allUsers = gson.fromJson(reader, User[].class);
   }
 

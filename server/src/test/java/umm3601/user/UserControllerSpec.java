@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import io.javalin.core.validation.Validator;
+import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.http.NotFoundResponse;
 
@@ -55,7 +56,6 @@ public class UserControllerSpec {
 
   @Test
   public void GET_to_request_age_25_users() throws IOException {
-
     Map<String, List<String>> queryParams = new HashMap<>();
     queryParams.put("age", Arrays.asList(new String[] { "25" }));
 
@@ -68,6 +68,26 @@ public class UserControllerSpec {
     for (User user : argument.getValue()) {
       assertEquals(25, user.age);
     }
+  }
+
+  /**
+   * Test that if the user sends a request with an illegal value in
+   * the age field (i.e., something that can't be parsed to a number)
+   * we get a reasonable error code back.
+   */
+  @Test
+  public void GET_to_request_users_with_illegal_age() {
+    // We'll set the requested "age" to be a string ("abc")
+    // that can't be parsed to a number.
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("age", Arrays.asList(new String[] { "abc" }));
+
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    // This should now throw a `BadRequestResponse` exception because
+    // our request has an age that can't be parsed to a number.
+    Assertions.assertThrows(BadRequestResponse.class, () -> {
+      userController.getUsers(ctx);
+    });
   }
 
   @Test

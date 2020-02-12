@@ -1,12 +1,14 @@
 package umm3601.user;
 
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+
+import io.javalin.http.BadRequestResponse;
 
 /**
  * A fake "database" of user info
@@ -22,7 +24,7 @@ public class Database {
 
   public Database(String userDataFile) throws IOException {
     Gson gson = new Gson();
-    FileReader reader = new FileReader(userDataFile);
+    InputStreamReader reader = new InputStreamReader(getClass().getResourceAsStream(userDataFile));
     allUsers = gson.fromJson(reader, User[].class);
   }
 
@@ -52,8 +54,13 @@ public class Database {
 
     // Filter age if defined
     if (queryParams.containsKey("age")) {
-      int targetAge = Integer.parseInt(queryParams.get("age").get(0));
-      filteredUsers = filterUsersByAge(filteredUsers, targetAge);
+      String ageParam = queryParams.get("age").get(0);
+      try {
+        int targetAge = Integer.parseInt(ageParam);
+        filteredUsers = filterUsersByAge(filteredUsers, targetAge);
+      } catch (NumberFormatException e) {
+        throw new BadRequestResponse("Specified age '" + ageParam + "' can't be parsed to an integer");
+      }
     }
     // Filter company if defined
     if (queryParams.containsKey("company")) {

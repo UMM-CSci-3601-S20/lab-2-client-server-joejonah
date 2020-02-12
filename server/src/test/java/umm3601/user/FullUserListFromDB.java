@@ -14,14 +14,14 @@ public class FullUserListFromDB {
 
   @Test
   public void totalUserCount() throws IOException {
-    Database db = new Database("src/main/data/users.json");
+    Database db = new Database("/users.json");
     User[] allUsers = db.listUsers(new HashMap<>());
     assertEquals(10, allUsers.length, "Incorrect total number of users");
   }
 
   @Test
   public void firstUserInFullList() throws IOException {
-    Database db = new Database("src/main/data/users.json");
+    Database db = new Database("/users.json");
     User[] allUsers = db.listUsers(new HashMap<>());
     User firstUser = allUsers[0];
     assertEquals("Connie Stewart", firstUser.name, "Incorrect name");

@@ -8,6 +8,8 @@ import java.util.Map;
 
 import com.google.gson.Gson;
 
+import io.javalin.http.BadRequestResponse;
+
 /**
  * A fake "database" of user info
  * <p>
@@ -52,8 +54,13 @@ public class Database {
 
     // Filter age if defined
     if (queryParams.containsKey("age")) {
-      int targetAge = Integer.parseInt(queryParams.get("age").get(0));
-      filteredUsers = filterUsersByAge(filteredUsers, targetAge);
+      String ageParam = queryParams.get("age").get(0);
+      try {
+        int targetAge = Integer.parseInt(ageParam);
+        filteredUsers = filterUsersByAge(filteredUsers, targetAge);
+      } catch (NumberFormatException e) {
+        throw new BadRequestResponse("Specified age '" + ageParam + "' can't be parsed to an integer");
+      }
     }
     // Filter company if defined
     if (queryParams.containsKey("company")) {

@@ -34,6 +34,6 @@ function getFilteredUsers() {
 
 
   get(url, function(returned_json){
-    document.getElementById('jsonDump').innerHTML = syntaxHighlight(JSON.stringify(JSON.parse(returned_json), null, 2));
+    document.getElementById('jsonDump').innerHTML = syntaxHighlight(JSON.stringify(returned_json, null, 2));
   });
 }

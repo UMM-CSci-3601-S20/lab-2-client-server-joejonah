@@ -1,31 +1,40 @@
+/*
+ * The next two functions `status` and `json` are used by
+ * `get` below to check the status of an HTTP response
+ * and convert the response to JSON.
+ */
+function status(response) {
+  if (response.status >= 200 && response.status < 300) {
+    return Promise.resolve(response)
+  } else {
+    return Promise.reject(new Error(response.statusText))
+  }
+}
+
+function json(response) {
+  return response.json()
+}
+
 /**
  * Utility function to make generating http requests easier.
  * Sends a GET request to the URL described by 'aUrl' with
  * our 'aCallback' function to be executed when the server
  * sends a response.
  *
- * Based on: http://stackoverflow.com/a/22076667
+ * Uses functions `status` and `json` to process the status
+ * and parse the results to JSON.
+ *
+ * Based on: https://stackoverflow.com/a/38297729 and
+ * https://developers.google.com/web/updates/2015/03/introduction-to-fetch?hl=en#chaining_promises
  */
 function get(aUrl, aCallback) {
-  var anHttpRequest = new XMLHttpRequest();
-
-  // Set a callback to be called when the ready state of our request changes.
-  anHttpRequest.onreadystatechange = function () {
-    /**
-     * Only call our 'aCallback' function if the ready state is 'DONE' and
-     * the request status is 200 ('OK')
-     *
-     * See https://httpstatuses.com/ for HTTP status codes
-     * See https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/readyState
-     *  for XMLHttpRequest ready state documentation.
-     *
-     */
-    if (anHttpRequest.readyState === 4 && anHttpRequest.status === 200)
-      aCallback(anHttpRequest.responseText);
-  };
-
-  anHttpRequest.open("GET", aUrl, true);
-  anHttpRequest.send(null);
+  fetch(aUrl)
+    .then(status)
+    .then(json)
+    .then(aCallback)
+    .catch(function(error) {
+      window.alert("There was a problem accessing this URL: " + aUrl + "\nError: <" + error + ">");
+    });
 }
 
 // Syntax highlighting for JSON

@@ -1,26 +1,8 @@
 /**
- * Function to get all the users!
+ * Gets users from the api.
+ *
+ * It adds the values of the various inputs to the requested URl to filter and order the returned users.
  */
-function getAllUsers() {
-  console.log("Getting all the users.");
-
-  get("/api/users", function (returned_json) {
-    document.getElementById('jsonDump').innerHTML = returned_json;
-  });
-}
-
-function getAllUsersByAge() {
-  console.log("Getting all the users.");
-
-  get("/api/users?age=" + document.getElementById("age").value, function (returned_json) {
-    document.getElementById('jsonDump').innerHTML = returned_json;
-  });
-}
-
-
-
-// gets users from the api.
-// It adds the values of the various inputs to the requested URl to filter and order the returned users.
 function getFilteredUsers() {
   console.log("Getting all the users.");
 

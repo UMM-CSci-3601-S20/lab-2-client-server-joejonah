@@ -18,3 +18,7 @@ pre {
 .key {
   color: red;
 }
+label {
+  display: inline;
+  font-weight: normal;
+}

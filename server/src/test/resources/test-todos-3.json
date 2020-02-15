@@ -10,21 +10,21 @@
     "_id": " ",
     "owner": "",
     "status": false,
-    "body": "&status=",
+    "body": "&status=incomplete",
     "category": "🤨"
   },
   {
     "_id": "\t",
     "owner": "",
     "status": false,
-    "body": " ",
+    "body": "",
     "category": "🥶"
   },
   {
     "_id": "\n",
     "owner": "",
     "status": false,
-    "body": "complete",
+    "body": "<span class=key>This text should not be red</span>",
     "category": "😃"
   }
 ]

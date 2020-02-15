@@ -26,6 +26,7 @@ public class TodoDatabase {
     Gson gson = new Gson();
     InputStreamReader reader = new InputStreamReader(getClass().getResourceAsStream(todoDataFile));
     allTodos = gson.fromJson(reader, Todo[].class);
+    reader.close();
   }
 
   public int size() {

@@ -66,7 +66,7 @@ public class TodoControllerSpec {
   }
 
   @ParameterizedTest
-  @MethodSource("GET_to_request_all_todos_params")
+  @MethodSource("params")
   public void GET_to_request_all_todos(
       TodoDatabase db,
       TodoController todoController) throws IOException {
@@ -79,7 +79,27 @@ public class TodoControllerSpec {
     assertEquals(db.size(), argument.getValue().length);
   }
 
-  public static Stream<Arguments> GET_to_request_all_todos_params() {
+  @ParameterizedTest
+  @MethodSource("params")
+  public void GET_to_request_owner_Kodos_todos(
+      TodoDatabase db,
+      TodoController todoController) throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("owner", Arrays.asList(new String[] { "Kodos" }));
+
+    // Call the method on the mock controller
+    todoController.getTodos(ctx);
+
+    // Confirm that `json` was called with all the todos.
+    ArgumentCaptor<Todo[]> argument = ArgumentCaptor.forClass(Todo[].class);
+    verify(ctx).json(argument.capture());
+    for (Todo todo : argument.getValue()) {
+      assertEquals("Kodos", todo.owner);
+    }
+  }
+
+
+  public static Stream<Arguments> params() {
     Arguments[] arguments = new Arguments[dbFileNames.length];
     for (int i = 0; i < dbFileNames.length; i++) {
       arguments[i] = Arguments.of(dbs[i], todoControllers[i]);

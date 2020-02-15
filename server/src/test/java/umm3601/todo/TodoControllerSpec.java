@@ -87,6 +87,8 @@ public class TodoControllerSpec {
     Map<String, List<String>> queryParams = new HashMap<>();
     queryParams.put("owner", Arrays.asList(new String[] { "Kodos" }));
 
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
     // Call the method on the mock controller
     todoController.getTodos(ctx);
 

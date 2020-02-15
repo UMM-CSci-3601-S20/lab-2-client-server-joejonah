@@ -68,11 +68,18 @@ public class TodoDatabase {
 
     //Filter owner if defined
     if (queryParams.containsKey("owner")) {
-      String ownerParam = queryParams.get("age").get(0);
+      String targetOwner = queryParams.get("owner").get(0);
       filteredTodos = filterTodosByOwner(filteredTodos, targetOwner);
     }
 
+    //Filter category if defined
+    if (queryParams.containsKey("category")) {
+      String targetCategory = queryParams.get("category").get(0);
+      filteredTodos = filterTodosByCategory(filteredTodos, targetCategory);
+    }
+
     return filteredTodos;
+
   }
 
 
@@ -89,6 +96,13 @@ public class TodoDatabase {
   //   return Arrays.stream(todos).filter(x -> x.age == targetAge).toArray(Todo[]::new);
   // }
 
+  public Todo[] filterTodosByOwner(Todo[] todos, String targetOwner) {
+    return Arrays.stream(todos).filter(x -> x.owner.equals(targetOwner)).toArray(Todo[]::new);
+  }
+
+  public Todo[] filterTodosByCategory(Todo[] todos, String targetCategory) {
+    return Arrays.stream(todos).filter(x -> x.category.equals(targetCategory)).toArray(Todo[]::new);
+  }
 
 
 }

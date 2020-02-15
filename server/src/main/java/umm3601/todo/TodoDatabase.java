@@ -78,6 +78,23 @@ public class TodoDatabase {
       filteredTodos = filterTodosByCategory(filteredTodos, targetCategory);
     }
 
+    //Filter status if defined
+    if (queryParams.containsKey("status")) {
+      String statusParam = queryParams.get("status").get(0);
+      boolean targetStatus;
+      switch (statusParam) {
+        case "complete":
+          targetStatus = true;
+          break;
+        case "incomplete":
+          targetStatus = false;
+          break;
+        default:
+          throw new BadRequestResponse("Specified status '" + statusParam + "' can't be parsed to a boolean");
+      }
+      filteredTodos = filterTodosByStatus(filteredTodos, targetStatus);
+    }
+
     return filteredTodos;
 
   }
@@ -104,5 +121,7 @@ public class TodoDatabase {
     return Arrays.stream(todos).filter(x -> x.category.equals(targetCategory)).toArray(Todo[]::new);
   }
 
-
+  public Todo[] filterTodosByStatus(Todo[] todos, boolean targetStatus) {
+    return Arrays.stream(todos).filter(x -> x.status == targetStatus).toArray(Todo[]::new);
+  }
 }

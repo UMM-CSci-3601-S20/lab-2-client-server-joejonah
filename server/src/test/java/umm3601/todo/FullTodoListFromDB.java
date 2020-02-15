@@ -12,14 +12,14 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 /**
- * Tests umm3601.user.Database listUser functionality
+ * Tests umm3601.user.TodoDatabase listTodo functionality
  */
 public class FullTodoListFromDB {
 
   @ParameterizedTest
   @MethodSource("totalTodoCountParams")
   public void totalTodoCount(String dbFileName, int todosCount) {
-    Database db = new Database(dbFileName);
+    TodoDatabase db = new TodoDatabase(dbFileName);
     Todo[] allTodos = db.listTodos(new HashMap<>());
     assertEquals(todosCount, allTodos.length, "Incorrect total number of todos");
   }
@@ -43,7 +43,7 @@ public class FullTodoListFromDB {
       boolean firstTodoStatus,
       String firstTodoBody,
       String firstTodoCategory) throws IOException {
-    Database db = new Database(dbFileName);
+    TodoDatabase db = new TodoDatabase(dbFileName);
     Todo[] allTodos = db.listTodos(new HashMap<>());
     Todo firstTodo = allTodos[0];
     assertEquals(firstTodoOwner, firstTodo.owner, "Incorrect owner");

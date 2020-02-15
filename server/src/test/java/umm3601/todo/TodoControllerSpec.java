@@ -100,6 +100,63 @@ public class TodoControllerSpec {
     }
   }
 
+  @ParameterizedTest
+  @MethodSource("params")
+  public void GET_to_request_category_smiley_face_todos(
+      TodoDatabase db,
+      TodoController todoController) throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("category", Arrays.asList(new String[] { "😃" }));
+
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    // Call the method on the mock controller
+    todoController.getTodos(ctx);
+
+    // Confirm that `json` was called with all the todos.
+    ArgumentCaptor<Todo[]> argument = ArgumentCaptor.forClass(Todo[].class);
+    verify(ctx).json(argument.capture());
+    for (Todo todo : argument.getValue()) {
+      assertEquals("😃", todo.category);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("params")
+  public void GET_to_request_status_incomplete_todos(
+      TodoDatabase db,
+      TodoController todoController) throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("status", Arrays.asList(new String[] { "incomplete" }));
+
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    // Call the method on the mock controller
+    todoController.getTodos(ctx);
+
+    // Confirm that `json` was called with all the todos.
+    ArgumentCaptor<Todo[]> argument = ArgumentCaptor.forClass(Todo[].class);
+    verify(ctx).json(argument.capture());
+    for (Todo todo : argument.getValue()) {
+      assertEquals(false, todo.status);
+    }
+  }
+
+  @ParameterizedTest
+  @MethodSource("params")
+  public void GET_with_illegal_status_throws_error(
+      TodoDatabase db,
+      TodoController todoController) throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("status", Arrays.asList(new String[] { "Should auld acquaintance be forgot and never brought to mind" }));
+
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    Assertions.assertThrows(BadRequestResponse.class, () -> {
+      todoController.getTodos(ctx);
+    });
+  }
+
 
   public static Stream<Arguments> params() {
     Arguments[] arguments = new Arguments[dbFileNames.length];

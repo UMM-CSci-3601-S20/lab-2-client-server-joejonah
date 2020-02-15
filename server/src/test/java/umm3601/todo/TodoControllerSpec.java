@@ -41,10 +41,10 @@ public class TodoControllerSpec {
     "/test-todos-2.json",
     "/test-todos-3.json",
   };
-  private TodoDatabase[] dbs;
-  private TodoController[] todoControllers;
+  private static TodoDatabase[] dbs;
+  private static TodoController[] todoControllers;
 
-  public TodoControllerSpec() throws IOException {
+  static {
     dbs = Arrays.stream(dbFileNames)
         .map(fileName -> {
           try {
@@ -79,7 +79,7 @@ public class TodoControllerSpec {
     assertEquals(db.size(), argument.getValue().length);
   }
 
-  public Stream<Arguments> GET_to_request_all_todos_params() {
+  public static Stream<Arguments> GET_to_request_all_todos_params() {
     Arguments[] arguments = new Arguments[dbFileNames.length];
     for (int i = 0; i < dbFileNames.length; i++) {
       arguments[i] = Arguments.of(dbs[i], todoControllers[i]);

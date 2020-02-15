@@ -24,7 +24,7 @@ public class FullTodoListFromDB {
     assertEquals(todosCount, allTodos.length, "Incorrect total number of todos");
   }
 
-  public Stream<Arguments> totalTodoCountParams() {
+  public static Stream<Arguments> totalTodoCountParams() {
     return Stream.of(
         Arguments.of("/test-todos-1.json", 3),
         Arguments.of("/test-todos-2.json", 0),
@@ -52,7 +52,7 @@ public class FullTodoListFromDB {
     assertEquals(firstTodoCategory, firstTodo.category, "Incorrect category");
   }
 
-  public Stream<Arguments> firstTodoInFullListParams() {
+  public static Stream<Arguments> firstTodoInFullListParams() {
     return Stream.of(
         Arguments.of(
             "/test-todos-1.json",

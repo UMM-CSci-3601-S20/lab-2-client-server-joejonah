@@ -41,15 +41,24 @@ public class TodoControllerSpec {
     "/test-todos-2.json",
     "/test-todos-3.json",
   };
-  private TodoDatabase[] dbs =
-      Arrays.stream(dbFileNames)
-        .map(fileName -> new TodoDatabase(fileName))
+  private TodoDatabase[] dbs;
+  private TodoController[] todoControllers;
+
+  public TodoControllerSpec() throws IOException {
+    dbs = Arrays.stream(dbFileNames)
+        .map(fileName -> {
+          try {
+            return new TodoDatabase(fileName);
+          } catch (IOException e) {
+            throw new RuntimeException(e);
+          }
+        })
         .toArray(TodoDatabase[]::new);
 
-  private TodoController[] todoControllers =
-      Arrays.stream(dbs)
-          .map(db -> new TodoController(db))
-          .toArray(TodoController[]::new);
+    todoControllers = Arrays.stream(dbs)
+        .map(db -> new TodoController(db))
+        .toArray(TodoController[]::new);
+  }
 
   @BeforeEach
   public void setUp() throws IOException {

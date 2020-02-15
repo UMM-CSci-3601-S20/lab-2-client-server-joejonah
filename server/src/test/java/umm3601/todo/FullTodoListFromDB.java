@@ -18,7 +18,7 @@ public class FullTodoListFromDB {
 
   @ParameterizedTest
   @MethodSource("totalTodoCountParams")
-  public void totalTodoCount(String dbFileName, int todosCount) {
+  public void totalTodoCount(String dbFileName, int todosCount) throws IOException {
     TodoDatabase db = new TodoDatabase(dbFileName);
     Todo[] allTodos = db.listTodos(new HashMap<>());
     assertEquals(todosCount, allTodos.length, "Incorrect total number of todos");

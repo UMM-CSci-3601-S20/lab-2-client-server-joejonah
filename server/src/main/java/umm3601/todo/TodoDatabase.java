@@ -66,7 +66,37 @@ public class TodoDatabase {
     // }
     // // Process other query parameters here...
 
+    //Filter owner if defined
+    if (queryParams.containsKey("owner")) {
+      String targetOwner = queryParams.get("owner").get(0);
+      filteredTodos = filterTodosByOwner(filteredTodos, targetOwner);
+    }
+
+    //Filter category if defined
+    if (queryParams.containsKey("category")) {
+      String targetCategory = queryParams.get("category").get(0);
+      filteredTodos = filterTodosByCategory(filteredTodos, targetCategory);
+    }
+
+    //Filter status if defined
+    if (queryParams.containsKey("status")) {
+      String statusParam = queryParams.get("status").get(0);
+      boolean targetStatus;
+      switch (statusParam) {
+        case "complete":
+          targetStatus = true;
+          break;
+        case "incomplete":
+          targetStatus = false;
+          break;
+        default:
+          throw new BadRequestResponse("Specified status '" + statusParam + "' can't be parsed to a boolean");
+      }
+      filteredTodos = filterTodosByStatus(filteredTodos, targetStatus);
+    }
+
     return filteredTodos;
+
   }
 
 
@@ -83,6 +113,15 @@ public class TodoDatabase {
   //   return Arrays.stream(todos).filter(x -> x.age == targetAge).toArray(Todo[]::new);
   // }
 
+  public Todo[] filterTodosByOwner(Todo[] todos, String targetOwner) {
+    return Arrays.stream(todos).filter(x -> x.owner.equals(targetOwner)).toArray(Todo[]::new);
+  }
 
+  public Todo[] filterTodosByCategory(Todo[] todos, String targetCategory) {
+    return Arrays.stream(todos).filter(x -> x.category.equals(targetCategory)).toArray(Todo[]::new);
+  }
 
+  public Todo[] filterTodosByStatus(Todo[] todos, boolean targetStatus) {
+    return Arrays.stream(todos).filter(x -> x.status == targetStatus).toArray(Todo[]::new);
+  }
 }

@@ -46,7 +46,7 @@ public class FilterTodosByCategoryFromDB {
   public static Stream<Arguments> categoriesAndCountsTodosParams() {
     return Stream.of(
         Arguments.of("/test-todos-1.json", "production", 1),
-        Arguments.of("/test-todos-2.json", "Doorboard", 0),
+        Arguments.of("/test-todos-2.json", "DoorBoard", 0),
         Arguments.of("/test-todos-3.json", "😃", 2));
   }
 }

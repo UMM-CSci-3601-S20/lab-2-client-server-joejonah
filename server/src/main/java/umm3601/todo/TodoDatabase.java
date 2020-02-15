@@ -66,6 +66,12 @@ public class TodoDatabase {
     // }
     // // Process other query parameters here...
 
+    //Filter owner if defined
+    if (queryParams.containsKey("owner")) {
+      String ownerParam = queryParams.get("age").get(0);
+      filteredTodos = filterTodosByOwner(filteredTodos, targetOwner);
+    }
+
     return filteredTodos;
   }
 

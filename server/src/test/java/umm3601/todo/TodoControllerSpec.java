@@ -158,7 +158,7 @@ public class TodoControllerSpec {
       TodoDatabase db,
       TodoController todoController) throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("status", Arrays.asList(new String[] { "2" }));
+    queryParams.put("limit", Arrays.asList(new String[] { "2" }));
 
     when(ctx.queryParamMap()).thenReturn(queryParams);
 
@@ -177,7 +177,7 @@ public class TodoControllerSpec {
       TodoDatabase db,
       TodoController todoController) throws IOException {
     Map<String, List<String>> queryParams = new HashMap<>();
-    queryParams.put("status", Arrays.asList(new String[] { "I'm not an integer!" }));
+    queryParams.put("limit", Arrays.asList(new String[] { "I'm not an integer!" }));
 
     when(ctx.queryParamMap()).thenReturn(queryParams);
 

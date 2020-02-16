@@ -35,14 +35,14 @@ public class LimitTodosFromDB {
     TodoDatabase db = new TodoDatabase(dbFileName);
     Map<String, List<String>> queryParams = new HashMap<>();
 
-    queryParams.put("category", Arrays.asList(new String[] { limit }));
-    Todo[] categoryTodos = db.listTodos(queryParams);
+    queryParams.put("limit", Arrays.asList(new String[] { Integer.toString(limit) }));
+    Todo[] limitedTodos = db.listTodos(queryParams);
 
-    assertEquals(count, categoryTodos.length, "Incorrect total number of limited todos");
+    assertEquals(count, limitedTodos.length, "Incorrect total number of limited todos");
   }
 
 
-  public static Stream<Arguments> categoriesAndCountsTodosParams() {
+  public static Stream<Arguments> limitsAndCountsTodosParams() {
     return Stream.of(
         Arguments.of("/test-todos-1.json", 2, 2),
         Arguments.of("/test-todos-2.json", 6, 0),

@@ -26,6 +26,7 @@ public class Database {
     Gson gson = new Gson();
     InputStreamReader reader = new InputStreamReader(getClass().getResourceAsStream(userDataFile));
     allUsers = gson.fromJson(reader, User[].class);
+    reader.close();
   }
 
   public int size() {

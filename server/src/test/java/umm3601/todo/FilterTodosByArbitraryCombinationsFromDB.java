@@ -24,6 +24,11 @@ public class FilterTodosByArbitraryCombinationsFromDB {
     Todo[] kodosTodos = db.listTodos(queryParams);
 
     queryParams.clear();
+    queryParams.put("limit", Arrays.asList(new String[] { "1" }));
+    queryParams.put("owner", Arrays.asList(new String[] { "Kodos" }));
+    Todo[] limitedKodosTodos = db.listTodos(queryParams);
+
+    queryParams.clear();
     queryParams.put("category", Arrays.asList(new String[] { "production" }));
     Todo[] productionTodos = db.listTodos(queryParams);
 
@@ -39,15 +44,17 @@ public class FilterTodosByArbitraryCombinationsFromDB {
     Todo[] kangSalesCompleteTodos = db.listTodos(queryParams);
 
     queryParams.clear();
+    queryParams.put("limit", Arrays.asList(new String[] { "0" }));
     queryParams.put("owner", Arrays.asList(new String[] { "Kang" }));
     queryParams.put("category", Arrays.asList(new String[] { "sales" }));
-    queryParams.put("status", Arrays.asList(new String[] { "incomplete" }));
-    Todo[] kangSalesIncompleteTodos = db.listTodos(queryParams);
+    queryParams.put("status", Arrays.asList(new String[] { "complete" }));
+    Todo[] limitedKangSalesCompleteTodos = db.listTodos(queryParams);
 
     assertEquals(2, kodosTodos.length, "Incorrect total number of todos with owner Kodos");
+    assertEquals(1, limitedKodosTodos.length, "Incorrect total number of todos with owner Kodos and limit 1");
     assertEquals(1, productionTodos.length, "Incorrect total number of todos with category production");
     assertEquals(1, kodosProductionTodos.length, "Incorrect total number of todos with owner Kodos and category production");
     assertEquals(1, kangSalesCompleteTodos.length, "Incorrect total number of todos with owner Kang and category sales and status complete");
-    assertEquals(0, kangSalesIncompleteTodos.length, "Incorrect total number of todos with owner Kodos and category sales and status incomplete");
+    assertEquals(0, limitedKangSalesCompleteTodos.length, "Incorrect total number of todos with owner Kang and category sales and status complete and limit 0");
   }
 }

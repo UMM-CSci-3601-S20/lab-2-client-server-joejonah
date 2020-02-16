@@ -99,6 +99,8 @@ public class TodoDatabase {
       String limitParam = queryParams.get("limit").get(0);
       try {
         int limit = Integer.parseInt(limitParam);
+        // Treat negative limits as zero.
+        limit = Math.max(limit, 0);
         filteredTodos = filterTodosWithLimit(filteredTodos, limit);
       } catch (NumberFormatException e) {
         throw new BadRequestResponse("Specified limit '" + limitParam + "' can't be parsed to an integer");

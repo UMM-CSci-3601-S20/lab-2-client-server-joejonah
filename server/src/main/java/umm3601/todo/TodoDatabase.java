@@ -95,8 +95,16 @@ public class TodoDatabase {
       filteredTodos = filterTodosByStatus(filteredTodos, targetStatus);
     }
 
+    if (queryParams.containsKey("limit")) {
+      String limitParam = queryParams.get("limit").get(0);
+      try {
+        int limit = Integer.parseInt(limitParam);
+        filteredTodos = filterTodosWithLimit(filteredTodos, limit);
+      } catch (NumberFormatException e) {
+        throw new BadRequestResponse("Specified limit '" + limitParam + "' can't be parsed to an integer");
+      }
+    }
     return filteredTodos;
-
   }
 
 
@@ -123,5 +131,9 @@ public class TodoDatabase {
 
   public Todo[] filterTodosByStatus(Todo[] todos, boolean targetStatus) {
     return Arrays.stream(todos).filter(x -> x.status == targetStatus).toArray(Todo[]::new);
+  }
+
+  public Todo[] filterTodosWithLimit(Todo[] todos, int maxNumberOfTodos) {
+    return Arrays.copyOfRange(todos, 0, Math.min(maxNumberOfTodos, todos.length));
   }
 }

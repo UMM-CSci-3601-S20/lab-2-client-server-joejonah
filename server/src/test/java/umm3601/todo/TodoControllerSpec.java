@@ -152,6 +152,40 @@ public class TodoControllerSpec {
     });
   }
 
+  @ParameterizedTest
+  @MethodSource("params")
+  public void GET_to_request_limit_2_todos(
+      TodoDatabase db,
+      TodoController todoController) throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("status", Arrays.asList(new String[] { "2" }));
+
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    // Call the method on the mock controller
+    todoController.getTodos(ctx);
+
+    // Confirm that `json` was called with all the todos.
+    ArgumentCaptor<Todo[]> argument = ArgumentCaptor.forClass(Todo[].class);
+    verify(ctx).json(argument.capture());
+    assertEquals(Math.min(db.size(), 2), argument.getValue().length);
+  }
+
+  @ParameterizedTest
+  @MethodSource("params")
+  public void GET_with_illegal_limit_throws_error(
+      TodoDatabase db,
+      TodoController todoController) throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("status", Arrays.asList(new String[] { "I'm not an integer!" }));
+
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    Assertions.assertThrows(BadRequestResponse.class, () -> {
+      todoController.getTodos(ctx);
+    });
+  }
+
 
   public static Stream<Arguments> params() {
     Arguments[] arguments = new Arguments[dbFileNames.length];

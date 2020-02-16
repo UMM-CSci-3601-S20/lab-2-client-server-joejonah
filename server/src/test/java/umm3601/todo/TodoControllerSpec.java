@@ -186,6 +186,23 @@ public class TodoControllerSpec {
     });
   }
 
+  @ParameterizedTest
+  @MethodSource("params")
+  public void GET_with_negative_limit_is_treated_as_zero(
+      TodoDatabase db,
+      TodoController todoController) throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("limit", Arrays.asList(new String[] { "-50" }));
+
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+    todoController.getTodos(ctx);
+
+    ArgumentCaptor<Todo[]> argument = ArgumentCaptor.forClass(Todo[].class);
+    verify(ctx).json(argument.capture());
+    assertEquals(0, argument.getValue().length);
+  }
+
+
 
   public static Stream<Arguments> params() {
     Arguments[] arguments = new Arguments[dbFileNames.length];

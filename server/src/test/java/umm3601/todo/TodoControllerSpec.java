@@ -202,7 +202,20 @@ public class TodoControllerSpec {
     assertEquals(0, argument.getValue().length);
   }
 
+  @ParameterizedTest
+  @MethodSource("params")
+  public void GET_with_hexidecimal_limit_throws_error(
+      TodoDatabase db,
+      TodoController todoController) throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("limit", Arrays.asList(new String[] { "0xFF" }));
 
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    Assertions.assertThrows(BadRequestResponse.class, () -> {
+      todoController.getTodos(ctx);
+    });
+  }
 
   public static Stream<Arguments> params() {
     Arguments[] arguments = new Arguments[dbFileNames.length];

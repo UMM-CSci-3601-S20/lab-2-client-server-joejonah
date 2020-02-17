@@ -3,6 +3,7 @@ package umm3601.todo;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -138,4 +139,29 @@ public class TodoDatabase {
   public Todo[] filterTodosWithLimit(Todo[] todos, int maxNumberOfTodos) {
     return Arrays.copyOfRange(todos, 0, Math.min(maxNumberOfTodos, todos.length));
   }
+
+  public Todo[] orderTodos(Todo[] todos, String fieldToOrderBy)
+      throws CantOrderByThatFieldException {
+    Todo[] todosCopy = Arrays.copyOf(todos, todos.length);
+
+    // This section uses reflection, so it's very very not any fun :(
+    // (This would be so easy in JavaScript 😢)
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    Comparator<Todo> c = Comparator.comparing(todo -> {
+      try {
+        return (Comparable)(todo.getClass().getField(fieldToOrderBy).get(todo));
+      } catch (
+          NoSuchFieldException
+          | IllegalAccessException
+          | ClassCastException e) {
+        throw new CantOrderByThatFieldException();
+      }
+    });
+
+    Arrays.sort(todosCopy, c);
+
+    return todosCopy;
+  }
+
+  public static class CantOrderByThatFieldException extends RuntimeException {}
 }

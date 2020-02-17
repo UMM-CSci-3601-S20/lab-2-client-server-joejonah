@@ -3,6 +3,7 @@ package umm3601.todo;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,13 @@ import io.javalin.http.BadRequestResponse;
  * "query" the "database".
  */
 public class TodoDatabase {
+
+  private static String[] allowedFieldsToOrderBy = {
+    "owner",
+    "body",
+    "status",
+    "category",
+  };
 
   private Todo[] allTodos;
 
@@ -95,6 +103,25 @@ public class TodoDatabase {
       filteredTodos = filterTodosByStatus(filteredTodos, targetStatus);
     }
 
+    if (queryParams.containsKey("orderBy")) {
+      String fieldToOrderBy = queryParams.get("orderBy").get(0);
+      if (!Arrays.asList(allowedFieldsToOrderBy).contains(fieldToOrderBy)) {
+        // HACK:
+        // We need to explicitly check the field against a list of fields.
+        // Trying to do that dynamically introduces problems in the case
+        // that filteredTodos contains zero or one elements--in those cases,
+        // invalid field names will never be detected, because the sorting
+        // code will never actually use them.
+        throw new BadRequestResponse("Specified value to order by '" + fieldToOrderBy + "' isn't recognized");
+      }
+      try {
+        filteredTodos = orderTodos(filteredTodos, fieldToOrderBy);
+      } catch (CantOrderByThatFieldException e) {
+        throw new BadRequestResponse("Specified value to order by '" + fieldToOrderBy + "' isn't recognized");
+      }
+    }
+
+    // It's important that limiting happen after ordering.
     if (queryParams.containsKey("limit")) {
       String limitParam = queryParams.get("limit").get(0);
       try {
@@ -138,4 +165,29 @@ public class TodoDatabase {
   public Todo[] filterTodosWithLimit(Todo[] todos, int maxNumberOfTodos) {
     return Arrays.copyOfRange(todos, 0, Math.min(maxNumberOfTodos, todos.length));
   }
+
+  public Todo[] orderTodos(Todo[] todos, String fieldToOrderBy)
+      throws CantOrderByThatFieldException {
+    Todo[] todosCopy = Arrays.copyOf(todos, todos.length);
+
+    // This section uses reflection, so it's very very not any fun :(
+    // (This would be so easy in JavaScript 😢)
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    Comparator<Todo> c = Comparator.comparing(todo -> {
+      try {
+        return (Comparable)(todo.getClass().getField(fieldToOrderBy).get(todo));
+      } catch (
+          NoSuchFieldException
+          | IllegalAccessException
+          | ClassCastException e) {
+        throw new CantOrderByThatFieldException();
+      }
+    });
+
+    Arrays.sort(todosCopy, c);
+
+    return todosCopy;
+  }
+
+  public static class CantOrderByThatFieldException extends RuntimeException {}
 }

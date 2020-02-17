@@ -46,6 +46,6 @@ public class FilterTodosByOwnerFromDB {
     return Stream.of(
         Arguments.of("/test-todos-1.json", "Kang", 1),
         Arguments.of("/test-todos-2.json", "Somebody who doesn't exist", 0),
-        Arguments.of("/test-todos-3.json", "", 4));
+        Arguments.of("/test-todos-3.json", "", 3));
   }
 }

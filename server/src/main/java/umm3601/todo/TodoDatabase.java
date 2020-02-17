@@ -21,6 +21,13 @@ import io.javalin.http.BadRequestResponse;
  */
 public class TodoDatabase {
 
+  private static String[] allowedFieldsToOrderBy = {
+    "owner",
+    "body",
+    "status",
+    "category",
+  };
+
   private Todo[] allTodos;
 
   public TodoDatabase(String todoDataFile) throws IOException {
@@ -98,6 +105,15 @@ public class TodoDatabase {
 
     if (queryParams.containsKey("orderBy")) {
       String fieldToOrderBy = queryParams.get("orderBy").get(0);
+      if (!Arrays.asList(allowedFieldsToOrderBy).contains(fieldToOrderBy)) {
+        // HACK:
+        // We need to explicitly check the field against a list of fields.
+        // Trying to do that dynamically introduces problems in the case
+        // that filteredTodos contains zero or one elements--in those cases,
+        // invalid field names will never be detected, because the sorting
+        // code will never actually use them.
+        throw new BadRequestResponse("Specified value to order by '" + fieldToOrderBy + "' isn't recognized");
+      }
       try {
         filteredTodos = orderTodos(filteredTodos, fieldToOrderBy);
       } catch (CantOrderByThatFieldException e) {

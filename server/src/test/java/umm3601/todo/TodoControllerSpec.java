@@ -322,8 +322,20 @@ public class TodoControllerSpec {
         Comparator.comparing(todo -> todo.status)));
   }
 
+  @ParameterizedTest
+  @MethodSource("params")
+  public void GET_to_request_todos_ordered_by_invalid_field(
+      TodoDatabase db,
+      TodoController todoController) throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("orderBy", Arrays.asList(new String[] { "Abbot and Costello" }));
 
+    when(ctx.queryParamMap()).thenReturn(queryParams);
 
+    Assertions.assertThrows(BadRequestResponse.class, () -> {
+      todoController.getTodos(ctx);
+    });
+  }
 
   public static Stream<Arguments> params() {
     Arguments[] arguments = new Arguments[dbFileNames.length];

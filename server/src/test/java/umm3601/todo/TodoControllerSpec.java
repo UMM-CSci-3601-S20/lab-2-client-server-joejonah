@@ -7,10 +7,13 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+
+import umm3601.Utils;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -233,6 +236,27 @@ public class TodoControllerSpec {
     Assertions.assertThrows(NotFoundResponse.class, () -> {
       todoControllers[0].getTodo(ctx);
     });
+  }
+
+  @ParameterizedTest
+  @MethodSource("params")
+  public void GET_to_request_todos_ordered_by_owner(
+      TodoDatabase db,
+      TodoController todoController) throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("orderBy", Arrays.asList(new String[] { "owner" }));
+
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    // Call the method on the mock controller
+    todoController.getTodos(ctx);
+
+    // Confirm that `json` was called with all the todos.
+    ArgumentCaptor<Todo[]> argument = ArgumentCaptor.forClass(Todo[].class);
+    verify(ctx).json(argument.capture());
+    Assertions.assertTrue(Utils.isSorted(
+        List.of(argument.getValue()),
+        Comparator.comparing(todo -> todo.owner)));
   }
 
   public static Stream<Arguments> params() {

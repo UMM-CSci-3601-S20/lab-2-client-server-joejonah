@@ -96,6 +96,16 @@ public class TodoDatabase {
       filteredTodos = filterTodosByStatus(filteredTodos, targetStatus);
     }
 
+    if (queryParams.containsKey("orderBy")) {
+      String fieldToOrderBy = queryParams.get("orderBy").get(0);
+      try {
+        filteredTodos = orderTodos(filteredTodos, fieldToOrderBy);
+      } catch (CantOrderByThatFieldException e) {
+        throw new BadRequestResponse("Specified value to order by '" + fieldToOrderBy + "' isn't recognized");
+      }
+    }
+
+    // It's important that limiting happen after ordering.
     if (queryParams.containsKey("limit")) {
       String limitParam = queryParams.get("limit").get(0);
       try {

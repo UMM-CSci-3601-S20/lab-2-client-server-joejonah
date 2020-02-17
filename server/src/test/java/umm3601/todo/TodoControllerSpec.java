@@ -259,6 +259,72 @@ public class TodoControllerSpec {
         Comparator.comparing(todo -> todo.owner)));
   }
 
+  @ParameterizedTest
+  @MethodSource("params")
+  public void GET_to_request_todos_ordered_by_category(
+      TodoDatabase db,
+      TodoController todoController) throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("orderBy", Arrays.asList(new String[] { "category" }));
+
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    // Call the method on the mock controller
+    todoController.getTodos(ctx);
+
+    // Confirm that `json` was called with all the todos.
+    ArgumentCaptor<Todo[]> argument = ArgumentCaptor.forClass(Todo[].class);
+    verify(ctx).json(argument.capture());
+    Assertions.assertTrue(Utils.isSorted(
+        List.of(argument.getValue()),
+        Comparator.comparing(todo -> todo.category)));
+  }
+
+  @ParameterizedTest
+  @MethodSource("params")
+  public void GET_to_request_todos_ordered_by_body(
+      TodoDatabase db,
+      TodoController todoController) throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("orderBy", Arrays.asList(new String[] { "body" }));
+
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    // Call the method on the mock controller
+    todoController.getTodos(ctx);
+
+    // Confirm that `json` was called with all the todos.
+    ArgumentCaptor<Todo[]> argument = ArgumentCaptor.forClass(Todo[].class);
+    verify(ctx).json(argument.capture());
+    Assertions.assertTrue(Utils.isSorted(
+        List.of(argument.getValue()),
+        Comparator.comparing(todo -> todo.body)));
+  }
+
+  @ParameterizedTest
+  @MethodSource("params")
+  public void GET_to_request_todos_ordered_by_status(
+      TodoDatabase db,
+      TodoController todoController) throws IOException {
+    Map<String, List<String>> queryParams = new HashMap<>();
+    queryParams.put("orderBy", Arrays.asList(new String[] { "status" }));
+
+    when(ctx.queryParamMap()).thenReturn(queryParams);
+
+    // Call the method on the mock controller
+    todoController.getTodos(ctx);
+
+    // Confirm that `json` was called with all the todos.
+    ArgumentCaptor<Todo[]> argument = ArgumentCaptor.forClass(Todo[].class);
+    verify(ctx).json(argument.capture());
+    Assertions.assertTrue(Utils.isSorted(
+        List.of(argument.getValue()),
+        Comparator.comparing(todo -> todo.status)));
+  }
+
+
+
+
   public static Stream<Arguments> params() {
     Arguments[] arguments = new Arguments[dbFileNames.length];
     for (int i = 0; i < dbFileNames.length; i++) {

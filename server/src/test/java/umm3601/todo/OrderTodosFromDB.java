@@ -30,7 +30,7 @@ public class OrderTodosFromDB {
     Todo[] orderedTodos = db.orderTodos(allTodos, "owner");
 
     Assertions.assertTrue(Utils.isSorted(
-        List.of(orderedTodos),
+        Arrays.asList(orderedTodos),
         Comparator.comparing(todo -> todo.owner)));
   }
 
@@ -43,7 +43,7 @@ public class OrderTodosFromDB {
     Todo[] orderedTodos = db.orderTodos(allTodos, "category");
 
     Assertions.assertTrue(Utils.isSorted(
-        List.of(orderedTodos),
+        Arrays.asList(orderedTodos),
         Comparator.comparing(todo -> todo.category)));
   }
 
@@ -56,7 +56,7 @@ public class OrderTodosFromDB {
     Todo[] orderedTodos = db.orderTodos(allTodos, "body");
 
     Assertions.assertTrue(Utils.isSorted(
-        List.of(orderedTodos),
+        Arrays.asList(orderedTodos),
         Comparator.comparing(todo -> todo.body)));
   }
 
@@ -69,7 +69,7 @@ public class OrderTodosFromDB {
     Todo[] orderedTodos = db.orderTodos(allTodos, "status");
 
     Assertions.assertTrue(Utils.isSorted(
-        List.of(orderedTodos),
+        Arrays.asList(orderedTodos),
         Comparator.comparing(todo -> todo.status)));
   }
 

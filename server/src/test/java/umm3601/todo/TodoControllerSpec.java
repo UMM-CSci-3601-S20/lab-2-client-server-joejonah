@@ -255,7 +255,7 @@ public class TodoControllerSpec {
     ArgumentCaptor<Todo[]> argument = ArgumentCaptor.forClass(Todo[].class);
     verify(ctx).json(argument.capture());
     Assertions.assertTrue(Utils.isSorted(
-        List.of(argument.getValue()),
+        Arrays.asList(argument.getValue()),
         Comparator.comparing(todo -> todo.owner)));
   }
 
@@ -276,7 +276,7 @@ public class TodoControllerSpec {
     ArgumentCaptor<Todo[]> argument = ArgumentCaptor.forClass(Todo[].class);
     verify(ctx).json(argument.capture());
     Assertions.assertTrue(Utils.isSorted(
-        List.of(argument.getValue()),
+        Arrays.asList(argument.getValue()),
         Comparator.comparing(todo -> todo.category)));
   }
 
@@ -297,7 +297,7 @@ public class TodoControllerSpec {
     ArgumentCaptor<Todo[]> argument = ArgumentCaptor.forClass(Todo[].class);
     verify(ctx).json(argument.capture());
     Assertions.assertTrue(Utils.isSorted(
-        List.of(argument.getValue()),
+        Arrays.asList(argument.getValue()),
         Comparator.comparing(todo -> todo.body)));
   }
 
@@ -318,7 +318,7 @@ public class TodoControllerSpec {
     ArgumentCaptor<Todo[]> argument = ArgumentCaptor.forClass(Todo[].class);
     verify(ctx).json(argument.capture());
     Assertions.assertTrue(Utils.isSorted(
-        List.of(argument.getValue()),
+        Arrays.asList(argument.getValue()),
         Comparator.comparing(todo -> todo.status)));
   }
 
